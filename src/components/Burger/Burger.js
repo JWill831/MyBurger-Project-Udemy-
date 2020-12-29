@@ -1,11 +1,18 @@
 import React from 'react'
+import classes from '../Burger/Burger.module.css';
+import BurgerIngrediant from './BurgerIngrediant/BurgerIngrediant';
+const Burger = (props) => {
 
-const Burger = () => {
+
     return (
-        <div>
+        <div className={classes.Burger}>
+            <BurgerIngrediant type="bread-top"/>
+            <BurgerIngrediant type="cheese"/>
+            <BurgerIngrediant type="meat"/>
+            <BurgerIngrediant type="bread-bottom"/>
             
         </div>
     )
 }
 
-export default Burger
+export default Burger;
