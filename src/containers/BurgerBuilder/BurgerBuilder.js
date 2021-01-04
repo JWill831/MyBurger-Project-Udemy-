@@ -1,14 +1,14 @@
-import React , {useState} from 'react';
+import React from 'react';
 import Auxilliary from '../../hoc/Auxilliary';
 import Burger from '../../components/Burger/Burger';
+import BuildControls from '../../components/Burger/BuildControls/BuildControls';
 
-// const [burgerState, setBurgerState]= new useState();
 const BurgerState={
     ingredients: {
-        salad: 1,
-        bacon: 1,
-        cheese: 2,
-        meat: 2
+        salad: 0,
+        bacon: 0,
+        cheese: 0,
+        meat: 0
     }
 };
 
@@ -20,7 +20,7 @@ const BurgerBuilder = () => {
         <div>
             <Auxilliary>
                 <Burger ingredients={BurgerState.ingredients}/>
-                <div>Build Controls</div>
+                <BuildControls/>
             </Auxilliary>
         </div>
     )
