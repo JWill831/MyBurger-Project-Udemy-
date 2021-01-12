@@ -48,7 +48,7 @@ const BurgerBuilder = (props) => {
         updatedIngredients[type] = updatedCounted;
         const priceDeduction = INGREDIENT_PRICES[type];
         const oldPrice = state.totalPrice;
-        const newPrice = oldPrice + priceDeduction;
+        const newPrice = oldPrice - priceDeduction;
         setState({ totalPrice: newPrice, ingredients: updatedIngredients });
     };
     const disabledInfo={
@@ -60,7 +60,8 @@ const BurgerBuilder = (props) => {
     return (
         <Auxillary>
             <Burger ingredients={state.ingredients} />
-            <BuildControls  
+            <BuildControls
+            price={state.totalPrice}  
             ingredientAdded={addIngredientHandler} 
             ingredientDeducted={removeIngredientHandler} 
             disabled={disabledInfo}/>
