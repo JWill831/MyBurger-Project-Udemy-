@@ -19,9 +19,28 @@ const BurgerBuilder = (props) => {
             cheese: 0,
             meat: 0
         },
-        totalPrice: 4
+        totalPrice: 4,
+        purchasable: false
     });
 
+    const updatePurchaseState =  (ingredients) => {
+        const sum = Object.keys(ingredients)
+        .map(igKey =>{ 
+            return ingredients[igKey];
+        })
+        .reduce((sum, el)=>{
+            return sum + el;
+        }, 0)
+        
+        if(sum>0){
+            return true
+        }
+        else{
+            return false
+        }
+    }
+    // const updatedPerchaseState = () => Object.values(ingridents).reduce((s,el) => s+el) > 0;
+    console.log("purchasable", state.purchasable)
     const addIngredientHandler = (type) => {
         const oldCount = state.ingredients[type];
         const updatedCounted = oldCount + 1;
@@ -32,8 +51,9 @@ const BurgerBuilder = (props) => {
         const priceAddition = INGREDIENT_PRICES[type];
         const oldPrice = state.totalPrice;
         const newPrice = oldPrice + priceAddition;
-        setState({ totalPrice: newPrice, ingredients: updatedIngredients });
-
+        updatePurchaseState(updatedIngredients);
+        setState({ totalPrice: newPrice, ingredients: updatedIngredients, purchasable:updatePurchaseState(updatedIngredients) });
+        
     };
 
     const removeIngredientHandler = (type) => {
@@ -49,7 +69,9 @@ const BurgerBuilder = (props) => {
         const priceDeduction = INGREDIENT_PRICES[type];
         const oldPrice = state.totalPrice;
         const newPrice = oldPrice - priceDeduction;
-        setState({ totalPrice: newPrice, ingredients: updatedIngredients });
+        updatePurchaseState(updatedIngredients);
+        setState({ totalPrice: newPrice, ingredients: updatedIngredients, purchasable:updatePurchaseState(updatedIngredients) });
+        
     };
     const disabledInfo={
         ...state.ingredients
@@ -64,6 +86,7 @@ const BurgerBuilder = (props) => {
             price={state.totalPrice}  
             ingredientAdded={addIngredientHandler} 
             ingredientDeducted={removeIngredientHandler} 
+            purchasable={state.purchasable}
             disabled={disabledInfo}/>
         </Auxillary>
 
