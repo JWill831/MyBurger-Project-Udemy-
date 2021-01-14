@@ -21,27 +21,27 @@ const BurgerBuilder = (props) => {
             meat: 0
         },
         totalPrice: 4,
-        purchasable: false
+        purchasable: false,
+        purchasing: false
     });
 
-    const updatePurchaseState =  (ingredients) => {
+    const updatePurchaseState = (ingredients) => {
         const sum = Object.keys(ingredients)
-        .map(igKey =>{ 
-            return ingredients[igKey];
-        })
-        .reduce((sum, el)=>{
-            return sum + el;
-        }, 0)
-        
-        if(sum>0){
-            return true
+            .map(igKey => {
+                return ingredients[igKey];
+            })
+            .reduce((sum, el) => {
+                return sum + el;
+            }, 0);
+
+        if (sum > 0) {
+            return true;
         }
-        else{
-            return false
+        else {
+            return false;
         }
-    }
+    };
     // const updatedPerchaseState = () => Object.values(ingridents).reduce((s,el) => s+el) > 0;
-    console.log("purchasable", state.purchasable)
     const addIngredientHandler = (type) => {
         const oldCount = state.ingredients[type];
         const updatedCounted = oldCount + 1;
@@ -53,13 +53,13 @@ const BurgerBuilder = (props) => {
         const oldPrice = state.totalPrice;
         const newPrice = oldPrice + priceAddition;
         updatePurchaseState(updatedIngredients);
-        setState({ totalPrice: newPrice, ingredients: updatedIngredients, purchasable:updatePurchaseState(updatedIngredients) });
-        
+        setState({ totalPrice: newPrice, ingredients: updatedIngredients, purchasable: updatePurchaseState(updatedIngredients) });
+
     };
 
     const removeIngredientHandler = (type) => {
         const oldCount = state.ingredients[type];
-        if (oldCount<=0){
+        if (oldCount <= 0) {
             return;
         }
         const updatedCounted = oldCount - 1;
@@ -71,27 +71,36 @@ const BurgerBuilder = (props) => {
         const oldPrice = state.totalPrice;
         const newPrice = oldPrice - priceDeduction;
         updatePurchaseState(updatedIngredients);
-        setState({ totalPrice: newPrice, ingredients: updatedIngredients, purchasable:updatePurchaseState(updatedIngredients) });
-        
+        setState({ totalPrice: newPrice, ingredients: updatedIngredients, purchasable: updatePurchaseState(updatedIngredients) });
+
     };
-    const disabledInfo={
+    const disabledInfo = {
         ...state.ingredients
     };
-    for (let key in disabledInfo){
-        disabledInfo[key]= disabledInfo[key]<=0
+    for (let key in disabledInfo) {
+        disabledInfo[key] = disabledInfo[key] <= 0;
     };
+    
+    
+    const purchaseHandler = () => {
+        const tempState = state
+        setState({ ...tempState, purchasing: true });
+    };
+    console.log('state', state)
+
     return (
         <Auxillary>
-            <Modal>
-                <OrderSummary ingredients={state.ingredients}/>
-            </Modal>
+            <Modal show={state.purchasing}>
+                <OrderSummary ingredients={state.ingredients} />
+            </Modal >
             <Burger ingredients={state.ingredients} />
             <BuildControls
-            price={state.totalPrice}  
-            ingredientAdded={addIngredientHandler} 
-            ingredientDeducted={removeIngredientHandler} 
-            purchasable={state.purchasable}
-            disabled={disabledInfo}/>
+                price={state.totalPrice}
+                ingredientAdded={addIngredientHandler}
+                ingredientDeducted={removeIngredientHandler}
+                ordered={purchaseHandler}
+                purchasable={state.purchasable}
+                disabled={disabledInfo} />
         </Auxillary>
 
     );
