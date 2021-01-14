@@ -90,12 +90,19 @@ const BurgerBuilder = (props) => {
         const tempState = state;
         setState({ ...tempState, purchasing: false });
     };
+    const purchaseContinueHandler=()=>{
+        alert('You continue!');
+    }
     console.log('state', state);
 
     return (
         <Auxillary>
             <Modal modalClosed={purchaseCancelHandler} show={state.purchasing}>
-                <OrderSummary ingredients={state.ingredients} />
+                <OrderSummary
+                price={state.totalPrice}
+                purchaseContinued={purchaseContinueHandler}
+                purchaseCancelled={purchaseCancelHandler}
+                ingredients={state.ingredients} />
             </Modal  >
             <Burger ingredients={state.ingredients} />
             <BuildControls
