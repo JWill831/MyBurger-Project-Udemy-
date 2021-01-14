@@ -3,6 +3,7 @@ import Auxillary from '../../hoc/Auxilliary';
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
 import Modal from '../../components/UI/Modal/Modal';
+import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
 
 const INGREDIENT_PRICES = {
     salad: 0.5,
@@ -81,7 +82,9 @@ const BurgerBuilder = (props) => {
     };
     return (
         <Auxillary>
-            <Modal/>
+            <Modal>
+                <OrderSummary ingredients={state.ingredients}/>
+            </Modal>
             <Burger ingredients={state.ingredients} />
             <BuildControls
             price={state.totalPrice}  
