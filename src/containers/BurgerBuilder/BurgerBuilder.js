@@ -80,19 +80,23 @@ const BurgerBuilder = (props) => {
     for (let key in disabledInfo) {
         disabledInfo[key] = disabledInfo[key] <= 0;
     };
-    
-    
+
+
     const purchaseHandler = () => {
-        const tempState = state
+        const tempState = state;
         setState({ ...tempState, purchasing: true });
     };
-    console.log('state', state)
+    const purchaseCancelHandler = () => {
+        const tempState = state;
+        setState({ ...tempState, purchasing: false });
+    };
+    console.log('state', state);
 
     return (
         <Auxillary>
-            <Modal show={state.purchasing}>
+            <Modal modalClosed={purchaseCancelHandler} show={state.purchasing}>
                 <OrderSummary ingredients={state.ingredients} />
-            </Modal >
+            </Modal  >
             <Burger ingredients={state.ingredients} />
             <BuildControls
                 price={state.totalPrice}
