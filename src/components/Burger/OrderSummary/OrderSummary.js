@@ -9,6 +9,10 @@ const OrderSummary = (props) => {
         .map(igKey => {
             return <li key={igKey}><span style={{ testTransform: 'capitalize' }}>{igKey}</span>: {props.ingredients[igKey]}</li>;
         });
+    
+        // componentDidUpdate() {
+        //     console.log('[OrderSummary], Will update');
+        // };
 
     return (
         <Auxillary>

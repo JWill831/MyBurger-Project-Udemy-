@@ -97,7 +97,7 @@ const BurgerBuilder = (props) => {
 
     return (
         <Auxillary>
-            <Modal modalClosed={purchaseCancelHandler} show={state.purchasing}>
+            <Modal show={state.purchasing} modalClosed={purchaseCancelHandler} >
                 <OrderSummary
                 price={state.totalPrice}
                 purchaseContinued={purchaseContinueHandler}
