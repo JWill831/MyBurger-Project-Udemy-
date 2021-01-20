@@ -1,6 +1,6 @@
 
 import './App.css';
-import Layout from './components/Layout/Layout';
+import Layout from '../src/components/Layout/layout';
 import BurgerBuilder from './containers/BurgerBuilder/BurgerBuilder'
 
 
