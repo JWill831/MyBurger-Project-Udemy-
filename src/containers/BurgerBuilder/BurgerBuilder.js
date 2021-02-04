@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Auxillary from '../../hoc/Auxilliary';
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
@@ -6,7 +6,7 @@ import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
 import axios from '../../axios-orders';
 import Spinner from '../../components/UI/Spinner/Spinner';
-
+import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
 const INGREDIENT_PRICES = {
     salad: 0.5,
@@ -17,17 +17,35 @@ const INGREDIENT_PRICES = {
 const BurgerBuilder = (props) => {
 
     const [state, setState] = useState({
-        ingredients: {
-            salad: 0,
-            bacon: 0,
-            cheese: 0,
-            meat: 0
-        },
+        ingredients: null
+        // {
+        //     salad: 0,
+        //     bacon: 0,
+        //     cheese: 0,
+        //     meat: 0
+        // },
+        ,
         totalPrice: 4,
         purchasable: false,
         purchasing: false,
-        loading: false
+        loading: false,
+        error: false
     });
+
+    useEffect(()=>{
+    const tempState=state;
+
+        axios.get('https://burger-builder-react-a2f6f-default-rtdb.firebaseio.com/ingredients.json')
+        .then(response=>{
+            console.log(response, 'useEffect')
+            setState({...tempState, ingredients: response.data})
+        })
+        .catch(error=>{
+            console.log(error=>{
+                setState({...tempState, error:true})
+            })
+        })
+    },[]);
 
     const updatePurchaseState = (ingredients) => {
         const sum = Object.keys(ingredients)
@@ -84,8 +102,6 @@ const BurgerBuilder = (props) => {
     for (let key in disabledInfo) {
         disabledInfo[key] = disabledInfo[key] <= 0;
     };
-
-
     const purchaseHandler = () => {
         const tempState = state;
         setState({ ...tempState, purchasing: true });
@@ -115,38 +131,48 @@ const BurgerBuilder = (props) => {
                 setState({...tempState, loading:false, purchasing:false})
             })
             .catch(error => {
-                setState({...tempState,loading:false, purchasing:false})
+                setState({...tempState, loading:false, purchasing:false})
             });
 
     };
-    console.log('state', state);
-    
-    let orderSummary = <OrderSummary
+    // console.log('state', state);
+    let orderSummary=null;
+    let burger = state.error ? <p>Ingredients can't be loaded! </p> : <Spinner/>;
+
+    if (state.ingredients){
+        burger= (
+            <Auxillary>
+            <Burger ingredients={state.ingredients} />
+                <BuildControls
+                    price={state.totalPrice}
+                    ingredientAdded={addIngredientHandler}
+                    ingredientDeducted={removeIngredientHandler}
+                    ordered={purchaseHandler}
+                    purchasable={state.purchasable}
+                    disabled={disabledInfo} />
+                </Auxillary>
+        );
+        orderSummary = <OrderSummary
         price={state.totalPrice}
         purchaseContinued={purchaseContinueHandler}
         purchaseCancelled={purchaseCancelHandler}
         ingredients={state.ingredients} />;
+        
+    }
     if (state.loading){
         orderSummary= <Spinner/>
     }
-
     return (
         <Auxillary>
             <Modal show={state.purchasing} modalClosed={purchaseCancelHandler} >
                 {orderSummary}
             </Modal  >
-            <Burger ingredients={state.ingredients} />
-            <BuildControls
-                price={state.totalPrice}
-                ingredientAdded={addIngredientHandler}
-                ingredientDeducted={removeIngredientHandler}
-                ordered={purchaseHandler}
-                purchasable={state.purchasable}
-                disabled={disabledInfo} />
+            {burger}
+            
         </Auxillary>
 
     );
 };
 
-export default BurgerBuilder;
+export default withErrorHandler(BurgerBuilder, axios);
 
